@@ -1,17 +1,48 @@
-import logo from '../assets/logo.jpg'
+import React, { useState } from 'react';
+import logo from '../assets/logo.jpg';
+import Button from './UI/Button';
+
+import { useCart } from '../store/CartContext';
+import Modal from './UI/Modal';
 
 const Header = () => {
-    return (
-        <header id="main-header">
-            <div id="title">
-                <img src={logo}/>
-                <h1>React Food Order App</h1>
-            </div>
-            <nav>
-            <button>Cart (0)</button>
-            </nav>
-        </header>
-    )
-}
+  const { cartItems } = useCart(); // Access cartItems from context
 
-export default Header
+  // Calculate total cart quantity by summing the quantity of each meal in the cart
+  const totalCartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+  // State to control the modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Open the modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <>
+      <header id="main-header">
+        <div id="title">
+          <img src={logo} alt="App Logo" />
+          <h1>React Food Order App</h1>
+        </div>
+        <nav>
+          {/* Cart button that opens the modal when clicked */}
+          <Button variant="text-button" onClick={openModal}>
+            Cart ({totalCartQuantity})
+          </Button>
+        </nav>
+      </header>
+
+      {/* Show the Modal only if isModalOpen is true */}
+      {isModalOpen && <Modal closeModal={closeModal} />}
+    </>
+  );
+};
+
+export default Header;
