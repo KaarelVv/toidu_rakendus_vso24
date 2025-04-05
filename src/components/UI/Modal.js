@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useCart } from '../../store/CartContext';
+import { formatPrice } from '../../utils/FormatPrice';
+import Button from './Button';
 
 
 const Modal = ({ closeModal }) => {
-  const { cartItems, removeFromCart } = useCart();  // Get cart data from CartContext
+  const { cartItems, removeFromCart, clearCart } = useCart();  // Get cart data from CartContext
 
   // Ref to handle modal dialog element
   const dialogRef = useRef(null);
@@ -11,13 +13,15 @@ const Modal = ({ closeModal }) => {
   // Ensure the modal opens on mount
   useEffect(() => {
     if (dialogRef.current) {
-      dialogRef.current.showModal();  // showModal is a built-in function for dialog elements
+      dialogRef.current.showModal();
     }
   }, []);
 
-  // Function to handle checkout logic (you can expand this later)
+  // Function to handle checkout logic 
   const handleCheckout = () => {
-    console.log('Proceeding to checkout');
+    console.log('Proceeding to checkout')
+    alert("Function in progress!")
+    clearCart()
   };
 
   return (
@@ -32,16 +36,15 @@ const Modal = ({ closeModal }) => {
           ) : (
             cartItems.map((item) => (
               <li key={item.id} className="cart-item">
-                <div className="cart-item-info">
-                  <h3>{item.name}</h3>
-                  <p>{item.description}</p>
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Price: €{(item.price * item.quantity).toFixed(2)}</p>
+                <div>
+                  <p>{item.name} - {item.quantity}</p>
                 </div>
 
                 {/* Cart Item Actions: Remove Item */}
                 <div className="cart-item-actions">
-                  <button onClick={() => removeFromCart(item.id)}>Remove</button>
+                  <Button variant="text-button" onClick={() => removeFromCart(item.id)}>
+                    -
+                  </Button>
                 </div>
               </li>
             ))
@@ -50,13 +53,13 @@ const Modal = ({ closeModal }) => {
 
         {/* Cart Total */}
         <div className="cart-total">
-          <p>Total: €{cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2)}</p>
+          <p>Total: {formatPrice(cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2))}</p>
         </div>
 
         {/* Modal Action Buttons */}
         <div className="modal-actions">
-          <button className="text-button" onClick={closeModal}>Close</button>
-          <button className="button" onClick={handleCheckout}>Checkout</button>
+          <Button variant="text-button" onClick={closeModal}>Close</Button>
+          <Button variant="button" onClick={handleCheckout}>Checkout</Button>
         </div>
       </div>
     </dialog>

@@ -16,7 +16,7 @@ const CartProvider = ({ children }) => {
     setCartItems((prevItems) => {
       const existingMeal = prevItems.find(item => item.id === meal.id);
       if (existingMeal) {
-        return prevItems.map(item => 
+        return prevItems.map(item =>
           item.id === meal.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       } else {
@@ -27,13 +27,22 @@ const CartProvider = ({ children }) => {
 
   // Function to remove items from the cart
   const removeFromCart = (mealId) => {
-    setCartItems((prevItems) => 
-      prevItems.filter(item => item.id !== mealId)
+    setCartItems((prevItems) =>
+      prevItems
+        .map(item => item.id === mealId
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+        )
+        .filter(item => item.quantity > 0)
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart }}>
       {children}
     </CartContext.Provider>
   );

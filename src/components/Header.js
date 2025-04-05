@@ -38,7 +38,6 @@ const Header = () => {
           </Button>
         </nav>
       </header>
-
       {/* Show the Modal only if isModalOpen is true */}
       {isModalOpen && <Modal closeModal={closeModal} />}
     </>
