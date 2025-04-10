@@ -10,6 +10,7 @@ const Header = () => {
 
   // Calculate total cart quantity by summing the quantity of each meal in the cart
   const totalCartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+ const doesCartHaveItems = cartItems.length > 0
 
   // State to control the modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +34,10 @@ const Header = () => {
         </div>
         <nav>
           {/* Cart button that opens the modal when clicked */}
-          <Button variant="text-button" onClick={openModal}>
+          <Button variant="text-button" 
+          onClick={doesCartHaveItems ? openModal : null}
+          disabled= {!doesCartHaveItems} 
+          >
             Cart ({totalCartQuantity})
           </Button>
         </nav>
